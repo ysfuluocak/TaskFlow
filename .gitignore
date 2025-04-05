@@ -1,0 +1,17 @@
+# Visual Studio / Rider
+.vs/
+.idea/
+*.user
+*.suo
+
+# Build
+bin/
+obj/
+
+# Mac
+.DS_Store
+
+# Dotnet secret / user-specific
+*.db
+*.log
+.env
