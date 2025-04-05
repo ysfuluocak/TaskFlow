@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using TaskFlow.Domain.Entities;
 
-namespace TaskFlow.Persistence;
+namespace TaskFlow.Persistence.Context;
 
 public class TaskDbContext : DbContext
 {

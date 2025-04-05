@@ -15,4 +15,8 @@
       <ProjectReference Include="..\..\Core\TaskFlow.Application\TaskFlow.Application.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Migrations\" />
+    </ItemGroup>
+
 </Project>

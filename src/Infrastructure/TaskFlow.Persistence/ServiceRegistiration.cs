@@ -1,7 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using TaskFlow.Application.Interfaces.Repositories;
-using TaskFlow.Persistence.Repositories;
+using TaskFlow.Application.Interfaces.Repositories.TaskRepositories;
+using TaskFlow.Persistence.Context;
+using TaskFlow.Persistence.Repositories.EfCoreRepositories.TaskRepository;
 
 namespace TaskFlow.Persistence;
 
@@ -11,7 +12,8 @@ public static class ServiceRegistiration
     {
         services.AddDbContext<TaskDbContext>(opt => { opt.UseInMemoryDatabase("TaskFlowDb"); });
 
-        services.AddScoped<ITaskRepository, TaskRepository>();
+        services.AddScoped<ITaskReadRepository, EfTaskReadRepository>();
+        services.AddScoped<ITaskWriteRepository, EfTaskWriteRepository>();
         return services;
     }
 }

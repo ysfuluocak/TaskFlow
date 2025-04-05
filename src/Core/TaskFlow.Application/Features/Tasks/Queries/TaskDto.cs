@@ -1,9 +1,10 @@
 namespace TaskFlow.Application.Features.Tasks.Queries;
 
-public class TaskDto
+public record TaskDto
 {
     public Guid Id { get; set; }
     public string Title { get; set; }
     public string Description { get; set; }
-    public DateTime DueDate { get; set; }
+    public string FilePath { get; set; }
+    public DateTime? DuaDate { get; set; }
 }

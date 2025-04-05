@@ -1,4 +1,6 @@
 using System.Reflection;
+using FluentValidation;
+using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace TaskFlow.Application;
@@ -11,6 +13,10 @@ public static class ServiceRegistiration
         {
             cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
         });
+
+        services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+
+        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 
         return services;
     }

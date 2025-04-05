@@ -7,13 +7,17 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.3"/>
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.3" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="8.1.0" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\..\Infrastructure\TaskFlow.Infrastructure\TaskFlow.Infrastructure.csproj" />
       <ProjectReference Include="..\..\Infrastructure\TaskFlow.Persistence\TaskFlow.Persistence.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="wwwroot\uploads\" />
     </ItemGroup>
 
 </Project>
