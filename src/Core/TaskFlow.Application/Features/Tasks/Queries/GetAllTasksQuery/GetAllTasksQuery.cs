@@ -1,9 +1,11 @@
 using MediatR;
-using TaskFlow.Application.Common.Results;
+using TaskFlow.Application.Wrappers.Results;
 
 namespace TaskFlow.Application.Features.Tasks.Queries.GetAllTasksQuery;
 
-public class GetAllTasksQuery : IRequest<Result<List<TaskDto>>>
+public record GetAllTasksQuery : IRequest<Result<Paginate<TaskDto>>>
 {
-    
+    public int PageIndex { get; set; } = 1;
+    public int PageSize { get; set; } = 10;
+
 }

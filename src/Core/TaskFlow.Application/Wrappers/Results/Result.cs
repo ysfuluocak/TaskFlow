@@ -1,5 +1,5 @@
 ﻿
-namespace TaskFlow.Application.Common.Results
+namespace TaskFlow.Application.Wrappers.Results
 {
     public class Result<T>
     {

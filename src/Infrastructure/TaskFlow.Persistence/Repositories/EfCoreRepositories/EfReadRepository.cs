@@ -1,11 +1,13 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 using System.Linq.Expressions;
 using TaskFlow.Application.Interfaces.Repositories;
+using TaskFlow.Domain.Common;
 
 namespace TaskFlow.Persistence.Repositories.EfCoreRepositories;
 
 public class EfReadRepository<TEntity> : IReadRepository<TEntity>
-    where TEntity : class, new()
+    where TEntity : BaseEntity, new()
 {
     private readonly DbContext _context;
     protected readonly DbSet<TEntity> _dbSet;
@@ -16,30 +18,89 @@ public class EfReadRepository<TEntity> : IReadRepository<TEntity>
         _dbSet = _context.Set<TEntity>();
     }
 
-    public async Task<IEnumerable<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>>? predicate = null)
+    //withDeleted false olmasi deletedDate null olanlari getir.(deletedDate null olmasi silinmemis demek)
+    public async Task<TEntity?> GetAsync(
+        Expression<Func<TEntity, bool>> predicate,
+        Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? include = null,
+        bool withDeleted = false,
+        bool enableTracking = true,
+        CancellationToken cancellationToken = default)
     {
-        var result = predicate != null ? _dbSet.AsNoTracking().Where(predicate) : _dbSet.AsNoTracking();
+        IQueryable<TEntity> query = _dbSet;
 
-        return await result.ToListAsync();
+        if (!enableTracking)
+            query = query.AsNoTracking();
+
+        if (!withDeleted)
+            query = query.Where(x => x.DeletedDate == null);
+
+        if (include != null)
+            query = include(query);
+
+        return await query.FirstOrDefaultAsync(predicate, cancellationToken);
     }
 
-    public async Task<TEntity?> Get(Expression<Func<TEntity, bool>> predicate,CancellationToken cancellationToken)
+    public async Task<List<TEntity>> GetListAsync(
+        Expression<Func<TEntity, bool>>? predicate = null,
+        Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null,
+        Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? include = null,
+        int index = 1,
+        int size = 10,
+        bool withDeleted = false,
+        bool enableTracking = true,
+        CancellationToken cancellationToken = default)
     {
-        return await _dbSet.AsNoTracking().FirstOrDefaultAsync(predicate,cancellationToken);
+        IQueryable<TEntity> query = _dbSet;
+
+        if (!enableTracking)
+            query = query.AsNoTracking();
+
+        if (!withDeleted)
+            query = query.Where(x => x.DeletedDate == null);
+
+        if (include != null)
+            query = include(query);
+
+        if (predicate != null)
+            query = query.Where(predicate);
+
+        if (orderBy != null)
+            query = orderBy(query);
+
+        int totalCount = await query.CountAsync(cancellationToken);
+
+        return await query.Skip(index - 1 * size).Take(size).ToListAsync(cancellationToken);
     }
 
-    public async Task<TEntity?> GetByIdAsync(object id,CancellationToken cancellationToken)
+    public async Task<int> CountAsync(
+        Expression<Func<TEntity, bool>>? predicate = null,
+        bool withDeleted = false,
+        CancellationToken cancellationToken = default)
     {
-        return await _dbSet.FindAsync(id,cancellationToken);
+        IQueryable<TEntity> query = _dbSet;
+
+        if (!withDeleted)
+            query = query.Where(x => x.DeletedDate == null);
+
+        if (predicate != null)
+            query = query.Where(predicate);
+
+        return await query.CountAsync(cancellationToken);
     }
 
-    public async Task<int> CountAsync(Expression<Func<TEntity, bool>>? predicate = null)
+    public async Task<bool> AnyAsync(
+        Expression<Func<TEntity, bool>>? predicate = null,
+        bool withDeleted = false,
+        CancellationToken cancellationToken = default)
     {
-        return await _dbSet.CountAsync(predicate);
-    }
+        IQueryable<TEntity> query = _dbSet;
 
-    public async Task<bool> ExistsAsync(Expression<Func<TEntity, bool>> predicate,CancellationToken cancellationToken)
-    {
-        return await _dbSet.AnyAsync(predicate,cancellationToken);
+        if (!withDeleted)
+            query = query.Where(x => x.DeletedDate == null);
+
+        if (predicate != null)
+            query = query.Where(predicate);
+
+        return await query.AnyAsync(cancellationToken);
     }
 }

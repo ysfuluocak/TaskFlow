@@ -1,5 +1,5 @@
 ﻿using MediatR;
-using TaskFlow.Application.Common.Results;
+using TaskFlow.Application.Wrappers.Results;
 
 namespace TaskFlow.Application.Features.Tasks.Queries.GetByIdTaskQuery
 {

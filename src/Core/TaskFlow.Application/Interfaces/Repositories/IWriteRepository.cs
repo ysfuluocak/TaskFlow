@@ -1,12 +1,13 @@
-﻿namespace TaskFlow.Application.Interfaces.Repositories
+﻿using TaskFlow.Domain.Common;
+
+namespace TaskFlow.Application.Interfaces.Repositories
 {
     public interface IWriteRepository<TEntity>
-        where TEntity : class,new()
+        where TEntity : BaseEntity, new()
     {
-        Task AddAsync(TEntity entity,CancellationToken cancellationToken);
-        Task UpdateAsync(TEntity entity,CancellationToken cancellationToken);
-        Task DeleteAsync(TEntity entity);
-        Task DeleteByIdAsync(object id,CancellationToken cancellationToken);
+        Task AddAsync(TEntity entity, CancellationToken cancellationToken);
+        TEntity Update(TEntity entit);
+        void Delete(TEntity entity);
         Task<int> CommitAsync(CancellationToken cancellationToken);
     }
 }

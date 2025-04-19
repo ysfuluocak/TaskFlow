@@ -6,6 +6,7 @@ using TaskFlow.Application.Features.Tasks.Commands.UpdateTask;
 using TaskFlow.Application.Features.Tasks.Commands.UploadFileTask;
 using TaskFlow.Application.Features.Tasks.Queries.GetAllTasksQuery;
 using TaskFlow.Application.Features.Tasks.Queries.GetByIdTaskQuery;
+using TaskFlow.Application.Features.Tasks.Queries.GetTasksQuery;
 
 namespace TaskFlow.API.Controllers;
 
@@ -35,9 +36,9 @@ public class TasksController : Controller
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAll()
+    public async Task<IActionResult> GetAll([FromQuery] GetAllTasksQuery request)
     {
-        var result = await _mediator.Send(new GetAllTasksQuery());
+        var result = await _mediator.Send(request);
         return result.Succeeded ? Ok(result.Data) : BadRequest(result.Errors);
     }
 
@@ -65,6 +66,13 @@ public class TasksController : Controller
             return BadRequest("No file uploaded.");
 
         var result = await _mediator.Send(new UploadFileTaskCommand(id, file));
+        return result.Succeeded ? Ok(result.Data) : BadRequest(result.Errors);
+    }
+
+    [HttpGet("filtered")]
+    public async Task<IActionResult> GetFilteredTasks([FromQuery] GetTasksQuery query)
+    {
+        var result = await _mediator.Send(query);
         return result.Succeeded ? Ok(result.Data) : BadRequest(result.Errors);
     }
 }

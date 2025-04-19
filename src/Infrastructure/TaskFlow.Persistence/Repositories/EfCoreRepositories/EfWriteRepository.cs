@@ -1,11 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using TaskFlow.Application.Interfaces.Repositories;
+using TaskFlow.Domain.Common;
 
 namespace TaskFlow.Persistence.Repositories.EfCoreRepositories
 {
     public class EfWriteRepository<TEntity> : IWriteRepository<TEntity>
-        where TEntity : class, new()
+        where TEntity : BaseEntity, new()
     {
         private readonly DbContext _context;
         protected readonly DbSet<TEntity> _dbSet;
@@ -16,11 +17,6 @@ namespace TaskFlow.Persistence.Repositories.EfCoreRepositories
             _dbSet = _context.Set<TEntity>();
         }
 
-        public async Task<int> CommitAsync(CancellationToken cancellationToken)
-        {
-           return await _context.SaveChangesAsync(cancellationToken);
-        }
-
         public async Task AddAsync(TEntity entity, CancellationToken cancellationToken)
         {
             await _dbSet.AddAsync(entity, cancellationToken);
@@ -28,20 +24,23 @@ namespace TaskFlow.Persistence.Repositories.EfCoreRepositories
         }
 
 
-        public async Task DeleteAsync(TEntity entity)
+        public void Delete(TEntity entity)
         {
-            await Task.Run(()=>_dbSet.Remove(entity));
+            entity.DeletedDate = DateTime.UtcNow;
+             _dbSet.Remove(entity);
         }
 
-        public async Task DeleteByIdAsync(object id, CancellationToken cancellationToken)
+        public TEntity Update(TEntity entity)
         {
-            var entity = await _dbSet.FindAsync(id,cancellationToken);
-            await DeleteAsync(entity);
+            entity.UpdatedDate = DateTime.UtcNow;
+            _dbSet.Update(entity);
+
+            return entity;
         }
 
-        public async Task UpdateAsync(TEntity entity, CancellationToken cancellationToken)
+        public async Task<int> CommitAsync(CancellationToken cancellationToken)
         {
-            await Task.Run(() => _dbSet.Update(entity));
+            return await _context.SaveChangesAsync(cancellationToken);
         }
     }
 }

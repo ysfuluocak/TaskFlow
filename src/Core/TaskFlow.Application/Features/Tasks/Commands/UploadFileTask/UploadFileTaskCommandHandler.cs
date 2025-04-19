@@ -1,6 +1,5 @@
 ﻿using MediatR;
-using System.Threading.Tasks;
-using TaskFlow.Application.Common.Results;
+using TaskFlow.Application.Wrappers.Results;
 using TaskFlow.Application.Features.Tasks.Queries;
 using TaskFlow.Application.Interfaces;
 using TaskFlow.Application.Interfaces.Repositories.TaskRepositories;
@@ -22,7 +21,10 @@ namespace TaskFlow.Application.Features.Tasks.Commands.UploadFileTask
         public async Task<Result<TaskDto>> Handle(UploadFileTaskCommand request, CancellationToken cancellationToken)
         {
 
-            var entity = await _taskReadRepository.GetByIdAsync(request.Id, cancellationToken);
+            var entity = await _taskReadRepository.GetAsync(
+                predicate: t => t.Id == request.Id,
+                cancellationToken: cancellationToken);
+
             if (entity == null)
             {
                 return Result<TaskDto>.Failure(new[] { "Task not found." });
@@ -31,7 +33,7 @@ namespace TaskFlow.Application.Features.Tasks.Commands.UploadFileTask
             string filePath = await _fileService.SaveFileAsync(request.Id, request.File);
             entity.FilePath = filePath;
 
-            await _taskWriteRepository.UpdateAsync(entity, cancellationToken);
+            _taskWriteRepository.Update(entity);
             await _taskWriteRepository.CommitAsync(cancellationToken);
 
             return Result<TaskDto>.Success(new TaskDto
@@ -39,6 +41,8 @@ namespace TaskFlow.Application.Features.Tasks.Commands.UploadFileTask
                 Id = entity.Id,
                 Title = entity.Title,
                 Description = entity.Description,
+                TaskCategoryId = entity.TaskCategoryId,
+                AssignedTo = entity.AssignedTo,
                 FilePath = entity.FilePath,
                 DuaDate = entity.DueDate
             });

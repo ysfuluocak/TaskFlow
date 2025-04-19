@@ -1,5 +1,5 @@
 ﻿using MediatR;
-using TaskFlow.Application.Common.Results;
+using TaskFlow.Application.Wrappers.Results;
 using TaskFlow.Application.Features.Tasks.Queries;
 using TaskFlow.Application.Interfaces.Repositories.TaskRepositories;
 
@@ -18,7 +18,9 @@ namespace TaskFlow.Application.Features.Tasks.Commands.UpdateTask
 
         public async Task<Result<TaskDto>> Handle(UpdateTaskCommand request, CancellationToken cancellationToken)
         {
-            var entity = await _readRepository.GetByIdAsync(request.Id, cancellationToken);
+            var entity = await _readRepository.GetAsync(
+                predicate : t=>t.Id == request.Id,
+                cancellationToken : cancellationToken);
 
             if (entity == null)
                 return Result<TaskDto>.Failure("Task not found");
@@ -28,7 +30,7 @@ namespace TaskFlow.Application.Features.Tasks.Commands.UpdateTask
             if (request.DueDate.HasValue)
                 entity.DueDate = request.DueDate.Value;
 
-            await _writeRepository.UpdateAsync(entity, cancellationToken);
+            _writeRepository.Update(entity);
             await _writeRepository.CommitAsync(cancellationToken);
 
             return Result<TaskDto>.Success(new TaskDto
@@ -36,6 +38,8 @@ namespace TaskFlow.Application.Features.Tasks.Commands.UpdateTask
                 Id = entity.Id,
                 Description = entity.Description,
                 DuaDate = entity.DueDate,
+                AssignedTo = request.AssignedTo,
+                TaskCategoryId = request.TaskCategoryId,
                 Title = entity.Title,
                 FilePath = entity.FilePath
             });

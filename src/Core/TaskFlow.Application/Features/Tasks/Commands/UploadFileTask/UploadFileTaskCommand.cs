@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Http;
-using TaskFlow.Application.Common.Results;
+using TaskFlow.Application.Wrappers.Results;
 using TaskFlow.Application.Features.Tasks.Queries;
 
 namespace TaskFlow.Application.Features.Tasks.Commands.UploadFileTask

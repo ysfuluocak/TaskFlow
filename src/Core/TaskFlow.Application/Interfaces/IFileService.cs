@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
-using TaskFlow.Application.Common.Results;
+using TaskFlow.Application.Wrappers.Results;
 
 namespace TaskFlow.Application.Interfaces
 {

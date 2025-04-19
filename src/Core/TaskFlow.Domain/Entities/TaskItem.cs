@@ -1,15 +1,17 @@
-using TaskStatus = TaskFlow.Domain.Enums.TaskStatus;
+using TaskFlow.Domain.Common;
+using TaskFlow.Domain.Enums;
 
 namespace TaskFlow.Domain.Entities;
 
-public class TaskItem
+public class TaskItem : BaseEntity
 {
-    public Guid Id { get; set; }
     public string Title { get; set; } = string.Empty;
     public string? Description { get; set; }
     public string? FilePath { get; set; }
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime? DueDate { get; set; }
-    public TaskStatus Status { get; set; } = TaskStatus.Todo;
+    public string? AssignedTo { get; set; }
+    public TaskItemStatus Status { get; set; } = TaskItemStatus.Todo;
+    public Guid TaskCategoryId { get; set; }
+    public TaskCategory TaskCategory { get; set; }
 
 }
