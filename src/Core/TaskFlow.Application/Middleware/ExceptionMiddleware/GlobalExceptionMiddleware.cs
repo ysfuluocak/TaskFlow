@@ -1,6 +1,4 @@
 ﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using System.Text.Json;
 using TaskFlow.Application.Exceptions.HttpProblemDetails.Handler;
 using TaskFlow.Application.Interfaces;
 
@@ -10,7 +8,7 @@ namespace TaskFlow.Application.Middleware.ExceptionMiddleware
     {
         private readonly RequestDelegate _next;
         private readonly ILogService _logger;
-        private readonly ProblemDetailsHandlerAbstract _problemDetailsHandler;
+        private readonly ProblemDetailsHandler _problemDetailsHandler;
 
         public GlobalExceptionMiddleware(RequestDelegate next, ILogService logger)
         {
@@ -23,6 +21,7 @@ namespace TaskFlow.Application.Middleware.ExceptionMiddleware
         {
             try
             {
+                _logger.LogInfo($"{DateTime.Now.ToString()} Started");
                 await _next(httpContext);
             }
             catch (Exception ex)
@@ -30,19 +29,17 @@ namespace TaskFlow.Application.Middleware.ExceptionMiddleware
                 _logger.LogError("An error occurred while processing the request.", ex);
                 await HandleExceptionAsync(httpContext, ex);
             }
+            finally
+            {
+                _logger.LogInfo($"{DateTime.Now.ToString()} Completed");
+            }
         }
 
-        private Task HandleExceptionAsync(HttpContext context, Exception exception)
+        private async Task HandleExceptionAsync(HttpContext context, Exception exception)
         {
-            ProblemDetails details = _problemDetailsHandler.HandleProblemDetails(exception);
-            context.Response.StatusCode = details.Status ?? StatusCodes.Status500InternalServerError;
-            return WriteAsJsonAsync(context.Response, details);
-        }
-
-        private Task WriteAsJsonAsync(HttpResponse response, ProblemDetails details)
-        {
-            response.ContentType = "application/json";
-            return JsonSerializer.SerializeAsync(response.Body, details);
+            context.Response.ContentType = "application/json";
+            _problemDetailsHandler.Response = context.Response;
+            await _problemDetailsHandler.HandleProblemDetailsAsync(exception);
         }
     }
 

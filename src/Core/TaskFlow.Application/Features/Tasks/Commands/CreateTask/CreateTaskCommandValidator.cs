@@ -2,7 +2,7 @@
 
 namespace TaskFlow.Application.Features.Tasks.Commands.CreateTask
 {
-    internal class CreateTaskCommandValidator : AbstractValidator<CreateTaskCommand>
+    public class CreateTaskCommandValidator : AbstractValidator<CreateTaskCommand>
     {
         public CreateTaskCommandValidator()
         {

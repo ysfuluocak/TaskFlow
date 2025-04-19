@@ -1,27 +1,35 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using TaskFlow.Application.Exceptions.ExceptionTypes;
+﻿using TaskFlow.Application.Exceptions.ExceptionTypes;
 
 namespace TaskFlow.Application.Exceptions.HttpProblemDetails.Handler
 {
     public abstract class ProblemDetailsHandlerAbstract
     {
-        public ProblemDetails HandleProblemDetails(Exception exception)
+        public async Task HandleProblemDetailsAsync(Exception exception)
         {
             if (exception is BusinessException businessException)
-                return HandleDetails(businessException);
+            {
+                await HandleDetails(businessException);
+                return;
+            }
 
             if (exception is ValidationException validationException)
-                return HandleDetails(validationException);
+            {
+                await HandleDetails(validationException);
+                return;
+            }
 
             if (exception is AuthorizationException authorizationException)
-                return HandleDetails(authorizationException);
+            {
+                await HandleDetails(authorizationException);
+                return;
+            }
 
-            return HandleDetails(exception);
+            await HandleDetails(exception);
         }
 
-        protected abstract ProblemDetails HandleDetails(BusinessException businessException);
-        protected abstract ProblemDetails HandleDetails(ValidationException validationException);
-        protected abstract ProblemDetails HandleDetails(AuthorizationException authorizationException);
-        protected abstract ProblemDetails HandleDetails(Exception exception);
+        protected abstract Task HandleDetails(BusinessException businessException);
+        protected abstract Task HandleDetails(ValidationException validationException);
+        protected abstract Task HandleDetails(AuthorizationException authorizationException);
+        protected abstract Task HandleDetails(Exception exception);
     }
 }

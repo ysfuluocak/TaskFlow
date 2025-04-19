@@ -22,3 +22,40 @@
 2025-04-19 18:43:06.863 +03:00 [INF] Task Eklendi
 2025-04-19 18:43:25.900 +03:00 [INF] Task Eklendi
 2025-04-19 18:51:10.452 +03:00 [INF] Task Eklendi
+2025-04-19 20:19:51.166 +03:00 [INF] Task Eklendi
+2025-04-19 20:21:16.575 +03:00 [INF] Task Eklendi
+2025-04-19 20:21:42.183 +03:00 [INF] Task Eklendi
+2025-04-19 20:31:39.613 +03:00 [INF] Task Eklendi
+2025-04-19 20:34:43.613 +03:00 [INF] Task Eklendi
+2025-04-19 20:34:49.367 +03:00 [INF] Task Eklendi
+2025-04-19 20:39:16.038 +03:00 [ERR] An error occurred while processing the request.
+2025-04-19 20:56:33.425 +03:00 [ERR] An error occurred while processing the request.
+2025-04-19 20:59:21.895 +03:00 [ERR] An error occurred while processing the request.
+2025-04-19 21:22:40.468 +03:00 [ERR] An error occurred while processing the request.
+2025-04-19 21:22:54.986 +03:00 [ERR] An error occurred while processing the request.
+2025-04-19 21:23:47.467 +03:00 [ERR] An error occurred while processing the request.
+2025-04-19 21:25:06.110 +03:00 [ERR] An error occurred while processing the request.
+2025-04-19 21:28:17.729 +03:00 [ERR] An error occurred while processing the request.
+2025-04-19 21:32:15.000 +03:00 [ERR] An error occurred while processing the request.
+2025-04-19 21:38:27.643 +03:00 [ERR] An error occurred while processing the request.
+2025-04-19 21:40:26.239 +03:00 [ERR] An error occurred while processing the request.
+2025-04-19 21:45:36.417 +03:00 [INF] 19.04.2025 Started
+2025-04-19 21:45:36.966 +03:00 [INF] 19.04.2025 Completed
+2025-04-19 21:45:44.105 +03:00 [INF] 19.04.2025 Started
+2025-04-19 21:45:44.221 +03:00 [INF] 19.04.2025 Completed
+2025-04-19 21:45:45.988 +03:00 [INF] 19.04.2025 Started
+2025-04-19 21:45:46.016 +03:00 [INF] 19.04.2025 Completed
+2025-04-19 21:45:48.617 +03:00 [INF] 19.04.2025 Started
+2025-04-19 21:45:48.631 +03:00 [INF] 19.04.2025 Completed
+2025-04-19 21:46:12.576 +03:00 [INF] 19.04.2025 Started
+2025-04-19 21:46:16.208 +03:00 [ERR] An error occurred while processing the request.
+2025-04-19 21:46:16.220 +03:00 [INF] 19.04.2025 Completed
+2025-04-19 21:46:27.827 +03:00 [INF] 19.04.2025 Started
+2025-04-19 21:46:27.855 +03:00 [INF] Task Eklendi
+2025-04-19 21:46:27.856 +03:00 [INF] 19.04.2025 Completed
+2025-04-19 21:46:32.754 +03:00 [INF] 19.04.2025 Started
+2025-04-19 21:46:32.811 +03:00 [INF] 19.04.2025 Completed
+2025-04-19 21:47:09.821 +03:00 [INF] 19.04.2025 Started
+2025-04-19 21:47:09.831 +03:00 [INF] 19.04.2025 Completed
+2025-04-19 21:47:50.971 +03:00 [INF] 19.04.2025 21:47:50 Started
+2025-04-19 21:47:51.490 +03:00 [INF] 19.04.2025 21:47:51 Completed

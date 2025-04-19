@@ -1,8 +1,10 @@
 ﻿using FluentValidation;
 using MediatR;
+using TaskFlow.Application.Exceptions.ExceptionTypes;
+using ValidationException = TaskFlow.Application.Exceptions.ExceptionTypes.ValidationException;
 
 public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
-     where TRequest : IRequest<TResponse>
+       where TRequest : IRequest<TResponse>
 {
     private readonly IEnumerable<IValidator<TRequest>> _validators;
 
@@ -22,11 +24,10 @@ public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TReques
             var failures = _validators
                 .Select(v => v.Validate(context))
                 .SelectMany(result => result.Errors)
-                .Where(f => f != null)
-                .ToList();
+                .Where(f => f != null);
 
             if (failures.Any())
-                throw new ValidationException(failures);
+                throw new ValidationException(failures.DistinctBy(f => f.PropertyName).Select(f => new ValidationExceptionModel(f.PropertyName, f.ErrorMessage)));
         }
 
         return await next();
