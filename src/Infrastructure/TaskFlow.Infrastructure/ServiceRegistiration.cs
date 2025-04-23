@@ -1,8 +1,10 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Serilog;
+﻿using Serilog;
 using TaskFlow.Application.Interfaces;
-using TaskFlow.Infrastructure.FileServices;
 using TaskFlow.Infrastructure.LogService;
+using TaskFlow.Infrastructure.FileServices;
+using TaskFlow.Infrastructure.Security.Hashing;
+using Microsoft.Extensions.DependencyInjection;
+using TaskFlow.Application.Interfaces.Security;
 
 namespace TaskFlow.Infrastructure
 {
@@ -18,6 +20,8 @@ namespace TaskFlow.Infrastructure
                 .CreateLogger();
 
             services.AddSingleton<ILogService, LogManager>();
+
+            services.AddScoped<IHashingHelper, HashingHelper>();
 
             return services;
         }

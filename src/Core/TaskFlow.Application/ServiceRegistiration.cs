@@ -1,8 +1,10 @@
-using System.Reflection;
-using FluentValidation;
 using MediatR;
+using FluentValidation;
+using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
-using TaskFlow.Application.Features.Tasks.Commands.CreateTask;
+using TaskFlow.Application.Features.Users.Rules;
+using TaskFlow.Application.Features.Boards.Rules;
+using TaskFlow.Application.Features.TaskEntities.Rules;
 
 namespace TaskFlow.Application;
 
@@ -15,9 +17,14 @@ public static class ServiceRegistiration
             cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
         });
 
-        services.AddValidatorsFromAssemblyContaining<CreateTaskCommandValidator>();
+        services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+
+        services.AddScoped<TaskEntityBusinessRules>();
+        services.AddScoped<BoardBusinessRules>();
+        services.AddScoped<UserBusinessRules>();
+
 
         return services;
     }

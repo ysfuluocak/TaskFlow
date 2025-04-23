@@ -1,21 +1,20 @@
+using TaskFlow.Domain.Common;
+using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
-using System.Linq.Expressions;
 using TaskFlow.Application.Interfaces.Repositories;
-using TaskFlow.Domain.Common;
 
 namespace TaskFlow.Persistence.Repositories.EfCoreRepositories;
 
-public class EfReadRepository<TEntity> : IReadRepository<TEntity>
+public class EfReadRepository<TEntity, TContext> : IReadRepository<TEntity>
     where TEntity : BaseEntity, new()
+    where TContext : DbContext
 {
-    private readonly DbContext _context;
-    protected readonly DbSet<TEntity> _dbSet;
+    protected readonly TContext Context;
 
-    public EfReadRepository(DbContext context)
+    public EfReadRepository(TContext context)
     {
-        _context = context;
-        _dbSet = _context.Set<TEntity>();
+        Context = context;
     }
 
     //withDeleted false olmasi deletedDate null olanlari getir.(deletedDate null olmasi silinmemis demek)
@@ -26,7 +25,7 @@ public class EfReadRepository<TEntity> : IReadRepository<TEntity>
         bool enableTracking = true,
         CancellationToken cancellationToken = default)
     {
-        IQueryable<TEntity> query = _dbSet;
+        IQueryable<TEntity> query = Context.Set<TEntity>();
 
         if (!enableTracking)
             query = query.AsNoTracking();
@@ -50,7 +49,7 @@ public class EfReadRepository<TEntity> : IReadRepository<TEntity>
         bool enableTracking = true,
         CancellationToken cancellationToken = default)
     {
-        IQueryable<TEntity> query = _dbSet;
+        IQueryable<TEntity> query = Context.Set<TEntity>();
 
         if (!enableTracking)
             query = query.AsNoTracking();
@@ -77,7 +76,7 @@ public class EfReadRepository<TEntity> : IReadRepository<TEntity>
         bool withDeleted = false,
         CancellationToken cancellationToken = default)
     {
-        IQueryable<TEntity> query = _dbSet;
+        IQueryable<TEntity> query = Context.Set<TEntity>();
 
         if (!withDeleted)
             query = query.Where(x => x.DeletedDate == null);
@@ -93,7 +92,7 @@ public class EfReadRepository<TEntity> : IReadRepository<TEntity>
         bool withDeleted = false,
         CancellationToken cancellationToken = default)
     {
-        IQueryable<TEntity> query = _dbSet;
+        IQueryable<TEntity> query = Context.Set<TEntity>();
 
         if (!withDeleted)
             query = query.Where(x => x.DeletedDate == null);

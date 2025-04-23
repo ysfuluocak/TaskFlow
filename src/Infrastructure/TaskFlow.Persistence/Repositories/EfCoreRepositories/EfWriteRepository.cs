@@ -1,46 +1,45 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using TaskFlow.Domain.Common;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using TaskFlow.Application.Interfaces.Repositories;
-using TaskFlow.Domain.Common;
 
 namespace TaskFlow.Persistence.Repositories.EfCoreRepositories
 {
-    public class EfWriteRepository<TEntity> : IWriteRepository<TEntity>
+    public class EfWriteRepository<TEntity, TContext> : IWriteRepository<TEntity>
         where TEntity : BaseEntity, new()
+        where TContext : DbContext
     {
-        private readonly DbContext _context;
-        protected readonly DbSet<TEntity> _dbSet;
+        protected readonly TContext Context;
 
-        public EfWriteRepository(DbContext context)
+        public EfWriteRepository(TContext context)
         {
-            _context = context;
-            _dbSet = _context.Set<TEntity>();
+            Context = context;
         }
 
         public async Task AddAsync(TEntity entity, CancellationToken cancellationToken)
         {
-            await _dbSet.AddAsync(entity, cancellationToken);
-            EntityEntry state = _dbSet.Entry(entity);
+            await Context.Set<TEntity>().AddAsync(entity, cancellationToken);
+            EntityEntry state = Context.Set<TEntity>().Entry(entity);
         }
 
 
         public void Delete(TEntity entity)
         {
             entity.DeletedDate = DateTime.UtcNow;
-             _dbSet.Remove(entity);
+            Context.Set<TEntity>().Remove(entity);
         }
 
         public TEntity Update(TEntity entity)
         {
             entity.UpdatedDate = DateTime.UtcNow;
-            _dbSet.Update(entity);
+            Context.Set<TEntity>().Update(entity);
 
             return entity;
         }
 
         public async Task<int> CommitAsync(CancellationToken cancellationToken)
         {
-            return await _context.SaveChangesAsync(cancellationToken);
+            return await Context.SaveChangesAsync(cancellationToken);
         }
     }
 }

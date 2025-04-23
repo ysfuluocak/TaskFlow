@@ -16,4 +16,9 @@
       <ProjectReference Include="..\..\Core\TaskFlow.Application\TaskFlow.Application.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Security\Encryption\" />
+      <Folder Include="Security\Jwt\" />
+    </ItemGroup>
+
 </Project>

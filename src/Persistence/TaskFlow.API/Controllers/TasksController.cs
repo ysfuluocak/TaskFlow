@@ -1,12 +1,11 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using TaskFlow.Application.Features.Tasks.Commands.CreateTask;
-using TaskFlow.Application.Features.Tasks.Commands.DeleteTask;
-using TaskFlow.Application.Features.Tasks.Commands.UpdateTask;
-using TaskFlow.Application.Features.Tasks.Commands.UploadFileTask;
-using TaskFlow.Application.Features.Tasks.Queries.GetAllTasksQuery;
-using TaskFlow.Application.Features.Tasks.Queries.GetByIdTaskQuery;
-using TaskFlow.Application.Features.Tasks.Queries.GetTasksQuery;
+using TaskFlow.Application.Features.TaskEntities.Commands.CreateTask;
+using TaskFlow.Application.Features.TaskEntities.Commands.DeleteTask;
+using TaskFlow.Application.Features.TaskEntities.Commands.UpdateTask;
+using TaskFlow.Application.Features.TaskEntities.Queries.GetTasksQuery;
+using TaskFlow.Application.Features.TaskEntities.Queries.GetAllTasksQuery;
+using TaskFlow.Application.Features.TaskEntities.Queries.GetByIdTaskQuery;
 
 namespace TaskFlow.API.Controllers;
 
@@ -22,7 +21,7 @@ public class TasksController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] CreateTaskCommand command)
+    public async Task<IActionResult> Create([FromBody] CreateTaskEntityCommand command)
     {
         var result = await _mediator.Send(command);
         return result.Succeeded ? Ok(result.Data) : BadRequest(result.Errors);
@@ -31,19 +30,19 @@ public class TasksController : Controller
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById(Guid id)
     {
-        var result = await _mediator.Send(new GetByIdTaskQuery(id));
+        var result = await _mediator.Send(new GetByIdTaskEntityQuery(id));
         return result.Succeeded ? Ok(result.Data) : BadRequest(result.Errors);
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAll([FromQuery] GetAllTasksQuery request)
+    public async Task<IActionResult> GetAll([FromQuery] GetAllTaskEntitiesQuery request)
     {
         var result = await _mediator.Send(request);
         return result.Succeeded ? Ok(result.Data) : BadRequest(result.Errors);
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> Update(Guid id, [FromBody] UpdateTaskCommand command)
+    public async Task<IActionResult> Update(Guid id, [FromBody] UpdateTaskEntityCommand command)
     {
         if (id != command.Id)
             return BadRequest("Task ID mismatch");
@@ -55,22 +54,12 @@ public class TasksController : Controller
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(Guid id)
     {
-        var result = await _mediator.Send(new DeleteTaskCommand(id));
-        return result.Succeeded ? Ok(result.Data) : BadRequest(result.Errors);
-    }
-
-    [HttpPost("{id}/upload")]
-    public async Task<IActionResult> UploadFile(Guid id, IFormFile file)
-    {
-        if (file == null || file.Length == 0)
-            return BadRequest("No file uploaded.");
-
-        var result = await _mediator.Send(new UploadFileTaskCommand(id, file));
+        var result = await _mediator.Send(new DeleteTaskEntityCommand(id));
         return result.Succeeded ? Ok(result.Data) : BadRequest(result.Errors);
     }
 
     [HttpGet("filtered")]
-    public async Task<IActionResult> GetFilteredTasks([FromQuery] GetTasksQuery query)
+    public async Task<IActionResult> GetFilteredTasks([FromQuery] GetTaskEntitiesQuery query)
     {
         var result = await _mediator.Send(query);
         return result.Succeeded ? Ok(result.Data) : BadRequest(result.Errors);

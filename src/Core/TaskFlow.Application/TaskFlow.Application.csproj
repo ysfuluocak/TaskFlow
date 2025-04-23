@@ -7,6 +7,10 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <Folder Include="Features\BoardSteps\" />
+      <Folder Include="Features\Attachments\" />
+      <Folder Include="Features\Comments\" />
+      <Folder Include="Features\Users\Queries\" />
       <Folder Include="Mapping\" />
     </ItemGroup>
 
